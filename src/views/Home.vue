@@ -1,5 +1,5 @@
 <template>
-    <my-page title="上传">
+    <my-page title="上传" :page="page">
         <ui-raised-button class="file-select-btn" label="上传文件" primary>
             <!-- <input type="file" class="ui-file-button" accept="image/*" @change="fileChange($event)"> -->
             <input type="file" class="ui-file-button" @change="fileChange($event)">
@@ -13,11 +13,6 @@
             return {
                 page: {
                     menu: [
-                        {
-                            type: 'icon',
-                            icon: 'help',
-                            to: '/help'
-                        }
                     ]
                 }
             }
@@ -33,12 +28,12 @@
             },
             fileChange(e) {
                 let files = e.target.files
-                if (files.length > 0) {
-                    let reader = new FileReader()
-                    reader.onload = e => {
-                        this.data = e.target.result
-                    }
-                    reader.readAsDataURL(files[0])
+                if (!files.length) {
+                    return
+                }
+                let reader = new FileReader()
+                reader.onload = e => {
+                    this.data = e.target.result
                     if (window.intent && !this.hasAddMenu) {
                         this.hasAddMenu = true
                         this.page.menu.push({
@@ -49,6 +44,7 @@
                         })
                     }
                 }
+                reader.readAsDataURL(files[0])
             },
             finish() {
                 window.intent.postResult(this.data)
