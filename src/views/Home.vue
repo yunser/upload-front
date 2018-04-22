@@ -44,7 +44,11 @@
                         })
                     }
                 }
-                reader.readAsDataURL(files[0])
+                if (window.intent.type.includes('image')) {
+                    reader.readAsDataURL(files[0])
+                } else {
+                    reader.readAsText(files[0])
+                }
             },
             finish() {
                 window.intent.postResult(this.data)
